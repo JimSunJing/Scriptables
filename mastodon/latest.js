@@ -14,16 +14,33 @@ class Im3xWidget {
    * 初始化
    * @param arg 外部传递过来的参数
    */
-  constructor (arg, loader) {
-    this.arg = arg
+  constructor(arg, loader) {
     this.loader = loader
     this.fileName = module.filename.split('Documents/')[1]
     this.widgetSize = config.widgetFamily
+    // 判断需要显示哪些内容
+    if (arg.indexOf('#') !== -1) {
+      this.domain = arg.split('#')[0]
+      this.arg = arg.split('#')[1]
+      this.type = 'hashtag'
+    } else if (arg.indexOf('^') !== -1) {
+      this.domain = arg.split('^')[0]
+      const u = arg.split('^')[1]
+      if (!Number.isInteger(u)) {
+        this.type = null
+      } else {
+        this.arg = u
+        this.type = 'user'
+      }
+    } else {
+      this.domain = arg
+      this.type = null
+    }
   }
   /**
    * 渲染组件
    */
-  async render () {
+  async render() {
     if (this.widgetSize === 'medium') {
       return await this.renderMedium()
     } else if (this.widgetSize === 'large') {
@@ -36,15 +53,18 @@ class Im3xWidget {
   /**
    * 渲染小尺寸组件
    */
-  async renderSmall () {
+  async renderSmall() {
     let w = new ListWidget()
-    w.addText("不支持尺寸")
+
+    let data = await this.getAPI()
+
+
     return w
   }
   /**
    * 渲染中尺寸组件
    */
-  async renderMedium () {
+  async renderMedium() {
     let w = new ListWidget()
     w.addText("不支持尺寸")
     return w
@@ -52,23 +72,23 @@ class Im3xWidget {
   /**
    * 渲染大尺寸组件
    */
-  async renderLarge () {
+  async renderLarge() {
     let w = new ListWidget()
     w.addText("不支持尺寸")
     return w
   }
 
-    /**
-   * 用户传递的组件自定义点击操作
-   */
-  async runActions () {
+  /**
+ * 用户传递的组件自定义点击操作
+ */
+  async runActions() {
     let { act, data } = this.parseQuery()
     if (!act) return
   }
 
   // 获取跳转自身 urlscheme
   // w.url = this.getURIScheme("copy", "data-to-copy")
-  getURIScheme (act, data) {
+  getURIScheme(act, data) {
     let _raw = typeof data === 'object' ? JSON.stringify(data) : data
     let _data = Data.fromString(_raw)
     let _b64 = _data.toBase64String()
@@ -76,7 +96,7 @@ class Im3xWidget {
   }
   // 解析 urlscheme 参数
   // { act: "copy", data: "copy" }
-  parseQuery () {
+  parseQuery() {
     const { act, data } = args['queryParameters']
     if (!act) return { act }
     let _data = Data.fromBase64String(data)
@@ -84,20 +104,20 @@ class Im3xWidget {
     let result = _raw
     try {
       result = JSON.parse(_raw)
-    } catch (e) {}
+    } catch (e) { }
     return {
       act,
       data: result
     }
   }
-  
+
   /**
    * 渲染标题
    * @param widget 组件对象
    * @param icon 图标url地址
    * @param title 标题
    */
-  async renderHeader (widget, icon, title) {
+  async renderHeader(widget, icon, title) {
     let header = widget.addStack()
     header.centerAlignContent()
     let _icon = header.addImage(await this.getImage(icon))
@@ -112,19 +132,32 @@ class Im3xWidget {
     return widget
   }
 
+  async getAPI() {
+    let api
+    if (!this.type) {
+      api = `https://${this.domain}/api/v1/timelines/public?limit=5`
+    } else if (this.type === 'hashtag') {
+      api = `https://${this.domain}/api/v1/timelines/tag/${this.arg}?limit=5`
+    } else if (this.type === 'user') {
+      api = `https://${this.domain}/api/v1/accounts/${this.arg}/statuses?limit=5`
+    }
+    let data = await this.getData(api)
+    return data
+  }
+
   /**
    * 获取api数据
    * @param api api地址
    * @param json 接口数据是否是 json 格式，如果不是（纯text)，则传递 false
    * @return 数据 || null
    */
-  async getData (api, json = true) {
+  async getData(api, json = true) {
     let data = null
     const cacheKey = `${this.fileName}_cache`
     try {
       let req = new Request(api)
       data = await (json ? req.loadJSON() : req.loadString())
-    } catch (e) {}
+    } catch (e) { }
     // 判断数据是否为空（加载失败）
     if (!data) {
       // 判断是否有缓存
@@ -140,12 +173,13 @@ class Im3xWidget {
     Keychain.set(cacheKey, json ? JSON.stringify(data) : data)
     return data
   }
+
   /**
    * 加载远程图片
    * @param url string 图片地址
    * @return image
    */
-  async getImage (url) {
+  async getImage(url) {
     try {
       let req = new Request(url)
       return await req.loadImage()
@@ -163,7 +197,7 @@ class Im3xWidget {
    * @param img 要处理的图片对象
    * @return image
    */
-  async shadowImage (img) {
+  async shadowImage(img) {
     let ctx = new DrawContext()
     ctx.size = img.size
     ctx.drawImageInRect(img, new Rect(0, 0, img.size['width'], img.size['height']))
@@ -173,11 +207,11 @@ class Im3xWidget {
     let res = await ctx.getImage()
     return res
   }
-  
+
   /**
    * 编辑测试使用
    */
-  async test () {
+  async test() {
     if (config.runsInWidget) return
     this.widgetSize = 'small'
     let w1 = await this.render()
@@ -189,11 +223,11 @@ class Im3xWidget {
     let w3 = await this.render()
     await w3.presentLarge()
   }
-  
+
   /**
    * 组件单独在桌面运行时调用
    */
-  async init () {
+  async init() {
     if (!config.runsInWidget) return await this.runActions()
     let widget = await this.render()
     Script.setWidget(widget)
