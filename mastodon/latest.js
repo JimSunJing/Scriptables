@@ -21,7 +21,7 @@ class Im3xWidget {
     // 判断需要显示哪些内容
     if (arg.indexOf('#') !== -1) {
       this.domain = arg.split('#')[0]
-      this.arg = arg.split('#')[1]
+      this.arg = encodeURI(arg.split('#')[1])
       this.type = 'hashtag'
     } else if (arg.indexOf('^') !== -1) {
       this.domain = arg.split('^')[0]
