@@ -63,8 +63,20 @@ class Im3xWidget {
     w.url = this.loader ? this.getURIScheme('open-url', {
       url: toot['url']
     }) : toot['url']
-    
+    w = await this.renderHeader(w)
+    let content = w.addText(toot['content'])
+    content.font = Font.lightSystemFont(16)
+    content.textColor = Color.white()
+    content.lineLimit = 3
 
+    w.backgroundImage = await this.shadowImage(await this.getImage(toot['account']['avatar']))
+
+    w.addSpacer(10)
+    let footer = w.addText(`@${toot['account']['display_name']} / ${toot['created_at'].split('T')[1].slice(0, 8)}`)
+    footer.font = Font.lightSystemFont(10)
+    footer.textColor = Color.white()
+    footer.textOpacity = 0.5
+    footer.lineLimit = 1
     return w
   }
   /**
@@ -72,7 +84,13 @@ class Im3xWidget {
    */
   async renderMedium() {
     let w = new ListWidget()
-    w.addText("不支持尺寸")
+    let data = await this.getAPI()
+    w.addSpacer(10)
+    w = await this.renderHeader(w, false)
+    for (let i = 0; i < 2; i++) {
+      w = await this.renderToot(w, data[i])
+      w.addSpacer(5)
+    }
     return w
   }
   /**
@@ -80,7 +98,13 @@ class Im3xWidget {
    */
   async renderLarge() {
     let w = new ListWidget()
-    w.addText("不支持尺寸")
+    let data = await this.getAPI()
+    w.addSpacer(10)
+    w = await this.renderHeader(w, false)
+    for (let i = 0; i < 5; i++) {
+      w = await this.renderToot(w, data[i])
+      w.addSpacer(5)
+    }
     return w
   }
 
@@ -126,7 +150,7 @@ class Im3xWidget {
   async renderHeader(widget, darkBg) {
     let icon = await this.getImage(`https://${this.domain}/favicon.ico`)
     let title = "Mastodon·" + this.domain
-    
+
     let header = widget.addStack()
     header.centerAlignContent()
     let _icon = header.addImage(icon)
@@ -138,6 +162,37 @@ class Im3xWidget {
     _title.textOpacity = 0.7
     _title.font = Font.boldSystemFont(12)
     widget.addSpacer(15)
+    return widget
+  }
+
+  async renderToot(widget, toot) {
+    let body = widget.addStack()
+    body.url = this.loader ? this.getURIScheme('open-url', {
+      url: toot['url']
+    }) : toot['url']
+
+    let left = body.addStack()
+    let avatar = left.addImage(await this.getImage(toot['account']['avatar']))
+    avatar.imageSize = new Size(35, 35)
+    avatar.cornerRadius = 5
+
+    body.addSpacer(10)
+
+    let right = body.addStack()
+    right.layoutVertically()
+    let content = right.addText(toot['content'])
+    content.font = Font.lightSystemFont(14)
+    content.lineLimit = 2
+
+    right.addSpacer(5)
+
+    let info = right.addText(`@${toot['account']['display_name']} / ${toot['created_at'].replace('T', ' ').slice(5, 19)}`)
+    info.font = Font.lightSystemFont(10)
+    info.textOpacity = 0.6
+    info.lineLimit = 2
+
+    widget.addSpacer(10)
+
     return widget
   }
 
