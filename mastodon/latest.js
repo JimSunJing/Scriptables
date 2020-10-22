@@ -57,7 +57,13 @@ class Im3xWidget {
     let w = new ListWidget()
 
     let data = await this.getAPI()
+    let toot = data[0]
 
+    // 这个应该是定义点击小组件时跳转的链接？
+    w.url = this.loader ? this.getURIScheme('open-url', {
+      url: toot['url']
+    }) : toot['url']
+    
 
     return w
   }
@@ -117,15 +123,18 @@ class Im3xWidget {
    * @param icon 图标url地址
    * @param title 标题
    */
-  async renderHeader(widget, icon, title) {
+  async renderHeader(widget, darkBg) {
+    let icon = await this.getImage(`https://${this.domain}/favicon.ico`)
+    let title = "Mastodon·" + this.domain
+    
     let header = widget.addStack()
     header.centerAlignContent()
-    let _icon = header.addImage(await this.getImage(icon))
+    let _icon = header.addImage(icon)
     _icon.imageSize = new Size(14, 14)
     _icon.cornerRadius = 4
     header.addSpacer(10)
     let _title = header.addText(title)
-    _title.textColor = Color.white()
+    if (darkBg) _title.textColor = Color.white()
     _title.textOpacity = 0.7
     _title.font = Font.boldSystemFont(12)
     widget.addSpacer(15)
