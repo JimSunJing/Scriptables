@@ -34,6 +34,8 @@ class Im3xWidget {
       }
     } else {
       this.domain = arg
+      // 默认浏览草莓县
+      if (!arg) this.domain = 'cmx-im.work'
       this.type = null
     }
   }
