@@ -14,18 +14,22 @@ class Im3xWidget {
    * 初始化
    * @param arg 外部传递过来的参数
    */
-  constructor(arg, loader) {
+  constructor(_arg, loader) {
+    // 默认使用长毛象中文站点
+    if (!_arg) _arg = "cmx-im.work"
     this.loader = loader
     this.fileName = module.filename.split('Documents/')[1]
     this.widgetSize = config.widgetFamily
+    // console.log(_arg)
     // 判断需要显示哪些内容
-    if (arg.indexOf('#') !== -1) {
-      this.domain = arg.split('#')[0]
-      this.arg = encodeURI(arg.split('#')[1])
+    if (_arg.indexOf('#') !== -1) {
+      this.domain = _arg.split('#')[0]
+      this.arg = encodeURI(_arg.split('#')[1])
       this.type = 'hashtag'
-    } else if (arg.indexOf('^') !== -1) {
-      this.domain = arg.split('^')[0]
-      const u = arg.split('^')[1]
+    } else if (_arg.indexOf('^') !== -1) {
+      this.domain = _arg.split('^')[0]
+      const u = _arg.split('^')[1]
+      console.log(u)
       if (!Number.isInteger(Number(u))) {
         this.type = null
       } else {
@@ -33,12 +37,16 @@ class Im3xWidget {
         this.type = 'user'
       }
     } else {
-      this.domain = arg
-      // 默认浏览草莓县
-      if (!arg) this.domain = 'cmx-im.work'
+      this.domain = _arg
       this.type = null
     }
   }
+
+  getTextFromHtml(html) {
+    let reg=/<\/?.+?\/?>/g
+    return html.replace(reg, '')
+  }
+
   /**
    * 渲染组件
    */
@@ -52,7 +60,7 @@ class Im3xWidget {
     }
   }
 
-  async renderErr (widget) {
+  async renderErr(widget) {
     let err = widget.addText("💔 加载失败，稍后重试..")
     err.textColor = Color.red()
     err.centerAlignText()
@@ -74,7 +82,7 @@ class Im3xWidget {
       url: toot['url']
     }) : toot['url']
     w = await this.renderHeader(w)
-    let content = w.addText(toot['content'])
+    let content = w.addText(this.getTextFromHtml(toot['content']))
     content.font = Font.lightSystemFont(16)
     content.textColor = Color.white()
     content.lineLimit = 3
@@ -191,7 +199,7 @@ class Im3xWidget {
 
     let right = body.addStack()
     right.layoutVertically()
-    let content = right.addText(toot['content'])
+    let content = right.addText(this.getTextFromHtml(toot['content']))
     content.font = Font.lightSystemFont(14)
     content.lineLimit = 2
 
