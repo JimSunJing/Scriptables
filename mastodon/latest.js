@@ -136,11 +136,11 @@ class Im3xWidget {
 
   // 获取跳转自身 urlscheme
   // w.url = this.getURIScheme("copy", "data-to-copy")
-  getURIScheme(act, data) {
+  getURIScheme (act, data) {
     let _raw = typeof data === 'object' ? JSON.stringify(data) : data
     let _data = Data.fromString(_raw)
     let _b64 = _data.toBase64String()
-    return `${URLScheme.forRunningScript()}?&act=${act}&data=${_b64}`
+    return `scriptable:///run?scriptName=${encodeURIComponent(Script.name())}&act=${act}&data=${_b64}&__widget__=${encodeURIComponent(args['widgetParameter'])}`
   }
   // 解析 urlscheme 参数
   // { act: "copy", data: "copy" }
