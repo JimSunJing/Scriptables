@@ -52,6 +52,13 @@ class Im3xWidget {
     }
   }
 
+  async renderErr (widget) {
+    let err = widget.addText("💔 加载失败，稍后重试..")
+    err.textColor = Color.red()
+    err.centerAlignText()
+    return widget
+  }
+
   /**
    * 渲染小尺寸组件
    */
@@ -62,6 +69,7 @@ class Im3xWidget {
     let toot = data[0]
 
     // 这个应该是定义点击小组件时跳转的链接？
+    if (!toot) return await this.renderErr(w)
     w.url = this.loader ? this.getURIScheme('open-url', {
       url: toot['url']
     }) : toot['url']
@@ -169,6 +177,7 @@ class Im3xWidget {
 
   async renderToot(widget, toot) {
     let body = widget.addStack()
+    if (!toot) return await this.renderErr(w)
     body.url = this.loader ? this.getURIScheme('open-url', {
       url: toot['url']
     }) : toot['url']
