@@ -26,7 +26,7 @@ class Im3xWidget {
     } else if (arg.indexOf('^') !== -1) {
       this.domain = arg.split('^')[0]
       const u = arg.split('^')[1]
-      if (!Number.isInteger(u)) {
+      if (!Number.isInteger(Number(u))) {
         this.type = null
       } else {
         this.arg = u
