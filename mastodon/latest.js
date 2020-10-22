@@ -4,9 +4,9 @@
 // 项目地址：https://github.com/JimSunJing/Scriptables
 // 功能说明：使用 mastodon 的站点公开api，查看最新/特别关注用户/话题最新嘟文
 // 参数列表：
-// mastodon@latest (default)
-// mastodon@latest:userid (specific user)
-// mastodon@latest:#hashtag (default)
+// mastodon@latest:domain (default)
+// mastodon@latest:domain^userid (specific user)
+// mastodon@latest:domain#hashtag (default)
 // 
 
 class Im3xWidget {
