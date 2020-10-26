@@ -78,9 +78,7 @@ class Im3xWidget {
 
     // 这个应该是定义点击小组件时跳转的链接？
     if (!toot) return await this.renderErr(w)
-    w.url = this.loader ? this.getURIScheme('open-url', {
-      url: toot['uri']
-    }) : toot['uri']
+    w.url = this.loader ? this.getURIScheme('open-url', toot['uri']) : toot['uri']
     w = await this.renderHeader(w)
     let content = w.addText(this.getTextFromHtml(toot['content']))
     content.font = Font.lightSystemFont(16)
@@ -95,7 +93,7 @@ class Im3xWidget {
     
     let formatter = new DateFormatter()
     formatter.dateFormat = 'MM-dd HH:mm'
-    
+
     let footer = w.addText(`@${toot['account']['display_name']} / ${formatter.string(time)}`)
     footer.font = Font.lightSystemFont(10)
     footer.textColor = Color.white()
@@ -192,9 +190,7 @@ class Im3xWidget {
   async renderToot(widget, toot) {
     let body = widget.addStack()
     if (!toot) return await this.renderErr(w)
-    body.url = this.loader ? this.getURIScheme('open-url', {
-      url: toot['uri']
-    }) : toot['uri']
+    body.url = this.loader ? this.getURIScheme('open-url', toot['uri']) : toot['uri']
 
     let left = body.addStack()
     let avatar = left.addImage(await this.getImage(toot['account']['avatar']))
