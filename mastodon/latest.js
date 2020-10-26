@@ -137,7 +137,7 @@ async runActions () {
   let { act, data } = this.parseQuery()
   if (!act) return
   if (act === 'open-url') {
-    Safari.openInApp(data, false)
+    Safari.open(data)
   }
 }
 
