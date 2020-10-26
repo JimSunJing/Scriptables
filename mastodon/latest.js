@@ -79,8 +79,8 @@ class Im3xWidget {
     // 这个应该是定义点击小组件时跳转的链接？
     if (!toot) return await this.renderErr(w)
     w.url = this.loader ? this.getURIScheme('open-url', {
-      url: toot['url']
-    }) : toot['url']
+      url: toot['uri']
+    }) : toot['uri']
     w = await this.renderHeader(w)
     let content = w.addText(this.getTextFromHtml(toot['content']))
     content.font = Font.lightSystemFont(16)
@@ -90,7 +90,13 @@ class Im3xWidget {
     w.backgroundImage = await this.shadowImage(await this.getImage(toot['account']['avatar']))
 
     w.addSpacer(10)
-    let footer = w.addText(`@${toot['account']['display_name']} / ${toot['created_at'].split('T')[1].slice(0, 8)}`)
+    const timeStr = (toot['created_at']+' GMT')
+    const time =new Date(Date(timeStr))
+    
+    let formatter = new DateFormatter()
+    formatter.dateFormat = 'MM-dd HH:mm'
+    
+    let footer = w.addText(`@${toot['account']['display_name']} / ${formatter.string(time)}`)
     footer.font = Font.lightSystemFont(10)
     footer.textColor = Color.white()
     footer.textOpacity = 0.5
@@ -187,8 +193,8 @@ class Im3xWidget {
     let body = widget.addStack()
     if (!toot) return await this.renderErr(w)
     body.url = this.loader ? this.getURIScheme('open-url', {
-      url: toot['url']
-    }) : toot['url']
+      url: toot['uri']
+    }) : toot['uri']
 
     let left = body.addStack()
     let avatar = left.addImage(await this.getImage(toot['account']['avatar']))
