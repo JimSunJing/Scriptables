@@ -204,7 +204,7 @@ class Im3xWidget {
     content.lineLimit = 2
 
     right.addSpacer(5)
-    
+
     const timeStr = (toot['created_at']+' GMT')
     const time =new Date(Date(timeStr))
     
