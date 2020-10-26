@@ -204,8 +204,14 @@ class Im3xWidget {
     content.lineLimit = 2
 
     right.addSpacer(5)
+    
+    const timeStr = (toot['created_at']+' GMT')
+    const time =new Date(Date(timeStr))
+    
+    let formatter = new DateFormatter()
+    formatter.dateFormat = 'MM-dd HH:mm'
 
-    let info = right.addText(`@${toot['account']['display_name']} / ${toot['created_at'].replace('T', ' ').slice(5, 19)}`)
+    let info = right.addText(`@${toot['account']['display_name']} / ${formatter.string(time)}`)
     info.font = Font.lightSystemFont(10)
     info.textOpacity = 0.6
     info.lineLimit = 2
