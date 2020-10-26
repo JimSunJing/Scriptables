@@ -133,10 +133,13 @@ class Im3xWidget {
   /**
  * 用户传递的组件自定义点击操作
  */
-  async runActions() {
-    let { act, data } = this.parseQuery()
-    if (!act) return
+async runActions () {
+  let { act, data } = this.parseQuery()
+  if (!act) return
+  if (act === 'open-url') {
+    Safari.openInApp(data, false)
   }
+}
 
   // 获取跳转自身 urlscheme
   // w.url = this.getURIScheme("copy", "data-to-copy")
