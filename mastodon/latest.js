@@ -88,8 +88,12 @@ class Im3xWidget {
     w.backgroundImage = await this.shadowImage(await this.getImage(toot['account']['avatar']))
 
     w.addSpacer(10)
-    const timeStr = (toot['created_at']+' GMT')
-    const time =new Date(Date(timeStr))
+    
+    const timeStr = toot['created_at'].substring(0, 19).replace('T', ' ')
+    console.log(timeStr)
+    let parseFormatter = new DateFormatter()
+    parseFormatter.dateFormat = 'yyyy-MM-dd HH:mm:ss'
+    const time = parseFormatter.date(timeStr)
     
     let formatter = new DateFormatter()
     formatter.dateFormat = 'MM-dd HH:mm'
@@ -192,7 +196,7 @@ async runActions () {
 
   async renderToot(widget, toot) {
     let body = widget.addStack()
-    if (!toot) return await this.renderErr(w)
+    if (!toot) return await this.renderErr(widget)
     body.url = this.loader ? this.getURIScheme('open-url', toot['uri']) : toot['uri']
 
     let left = body.addStack()
@@ -210,8 +214,11 @@ async runActions () {
 
     right.addSpacer(5)
 
-    const timeStr = (toot['created_at']+' GMT')
-    const time =new Date(Date(timeStr))
+    const timeStr = toot['created_at'].substring(0, 19).replace('T', ' ')
+    console.log(timeStr)
+    let parseFormatter = new DateFormatter()
+    parseFormatter.dateFormat = 'yyyy-MM-dd HH:mm:ss'
+    const time = parseFormatter.date(timeStr)
     
     let formatter = new DateFormatter()
     formatter.dateFormat = 'MM-dd HH:mm'
