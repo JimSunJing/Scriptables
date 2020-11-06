@@ -107,7 +107,7 @@ class Im3xWidget {
     let formatter = new DateFormatter()
     formatter.dateFormat = 'MM-dd HH:mm'
 
-    let footer = w.addText(`@${toot['account']['display_name']} / ${formatter.string(local)}`)
+    let footer = w.addText(`@${toot['account']['display_name']} / ${local}`)
     footer.font = Font.lightSystemFont(10)
     footer.textColor = Color.white()
     footer.textOpacity = 0.5
@@ -243,7 +243,7 @@ async runActions () {
     let formatter = new DateFormatter()
     formatter.dateFormat = 'MM-dd HH:mm'
 
-    let info = right.addText(`@${toot['account']['display_name']} / ${formatter.string(local)}`)
+    let info = right.addText(`@${toot['account']['display_name']} / ${local}`)
     info.font = Font.lightSystemFont(10)
     info.textOpacity = 0.6
     info.lineLimit = 2
