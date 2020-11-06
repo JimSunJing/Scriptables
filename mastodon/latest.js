@@ -99,7 +99,7 @@ class Im3xWidget {
       	        hour: '2-digit',
        	        minute: '2-digit',
      	        second: '2-digit'
-    }).replace('/', ' ')
+    }).replace(/\//g, ' ')
 
     let footer = w.addText(`@${toot['account']['display_name']} / ${local}`)
     footer.font = Font.lightSystemFont(10)
@@ -228,7 +228,7 @@ async runActions () {
       	        hour: '2-digit',
        	        minute: '2-digit',
      	        second: '2-digit'
-    }).replace('/', ' ')
+    }).replace(/\//g, ' ')
     
     let info = right.addText(`@${toot['account']['display_name']} / ${local}`)
     info.font = Font.lightSystemFont(10)
