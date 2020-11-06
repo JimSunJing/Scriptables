@@ -94,11 +94,20 @@ class Im3xWidget {
     let parseFormatter = new DateFormatter()
     parseFormatter.dateFormat = 'yyyy-MM-dd HH:mm:ss'
     const time = parseFormatter.date(timeStr)
-    
+     
+    var local = time.toLocaleString('en-US', {
+	        hour12: false,
+	        year: 'numeric',
+	        month: '2-digit',
+	        day: '2-digit',
+	        hour: '2-digit',
+	        minute: '2-digit',
+	        second: '2-digit'
+    })
     let formatter = new DateFormatter()
     formatter.dateFormat = 'MM-dd HH:mm'
 
-    let footer = w.addText(`@${toot['account']['display_name']} / ${formatter.string(time)}`)
+    let footer = w.addText(`@${toot['account']['display_name']} / ${formatter.string(local)}`)
     footer.font = Font.lightSystemFont(10)
     footer.textColor = Color.white()
     footer.textOpacity = 0.5
@@ -194,6 +203,7 @@ async runActions () {
     return widget
   }
 
+  // 渲染嘟嘟
   async renderToot(widget, toot) {
     let body = widget.addStack()
     if (!toot) return await this.renderErr(widget)
@@ -220,10 +230,20 @@ async runActions () {
     parseFormatter.dateFormat = 'yyyy-MM-dd HH:mm:ss'
     const time = parseFormatter.date(timeStr)
     
+    var local = time.toLocaleString('en-US', {
+	        hour12: false,
+	        year: 'numeric',
+	        month: '2-digit',
+	        day: '2-digit',
+	        hour: '2-digit',
+	        minute: '2-digit',
+	        second: '2-digit'
+    })
+
     let formatter = new DateFormatter()
     formatter.dateFormat = 'MM-dd HH:mm'
 
-    let info = right.addText(`@${toot['account']['display_name']} / ${formatter.string(time)}`)
+    let info = right.addText(`@${toot['account']['display_name']} / ${formatter.string(local)}`)
     info.font = Font.lightSystemFont(10)
     info.textOpacity = 0.6
     info.lineLimit = 2
