@@ -89,23 +89,17 @@ class Im3xWidget {
 
     w.addSpacer(10)
     
-    const timeStr = toot['created_at'].substring(0, 19).replace('T', ' ')
-    console.log(timeStr)
-    let parseFormatter = new DateFormatter()
-    parseFormatter.dateFormat = 'yyyy-MM-dd HH:mm:ss'
-    const time = parseFormatter.date(timeStr)
-     
-    var local = time.toLocaleString('en-US', {
-	        hour12: false,
-	        year: 'numeric',
-	        month: '2-digit',
-	        day: '2-digit',
-	        hour: '2-digit',
-	        minute: '2-digit',
-	        second: '2-digit'
-    })
-    let formatter = new DateFormatter()
-    formatter.dateFormat = 'MM-dd HH:mm'
+    const originTime = toot['created_at']
+    const dateFromOri = new Date(originTime)
+    let local = dateFromOri.toLocaleString('zh-Hans', {
+       	        hour12: false,
+       	        year: 'numeric',
+       	        month: '2-digit',
+      	        day: '2-digit',
+      	        hour: '2-digit',
+       	        minute: '2-digit',
+     	        second: '2-digit'
+    }).replace('/', ' ')
 
     let footer = w.addText(`@${toot['account']['display_name']} / ${local}`)
     footer.font = Font.lightSystemFont(10)
@@ -224,25 +218,18 @@ async runActions () {
 
     right.addSpacer(5)
 
-    const timeStr = toot['created_at'].substring(0, 19).replace('T', ' ')
-    console.log(timeStr)
-    let parseFormatter = new DateFormatter()
-    parseFormatter.dateFormat = 'yyyy-MM-dd HH:mm:ss'
-    const time = parseFormatter.date(timeStr)
+    const originTime = toot['created_at']
+    const dateFromOri = new Date(originTime)
+    let local = dateFromOri.toLocaleString('zh-Hans', {
+       	        hour12: false,
+       	        year: 'numeric',
+       	        month: '2-digit',
+      	        day: '2-digit',
+      	        hour: '2-digit',
+       	        minute: '2-digit',
+     	        second: '2-digit'
+    }).replace('/', ' ')
     
-    var local = time.toLocaleString('en-US', {
-	        hour12: false,
-	        year: 'numeric',
-	        month: '2-digit',
-	        day: '2-digit',
-	        hour: '2-digit',
-	        minute: '2-digit',
-	        second: '2-digit'
-    })
-
-    let formatter = new DateFormatter()
-    formatter.dateFormat = 'MM-dd HH:mm'
-
     let info = right.addText(`@${toot['account']['display_name']} / ${local}`)
     info.font = Font.lightSystemFont(10)
     info.textOpacity = 0.6
